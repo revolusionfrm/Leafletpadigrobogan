@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <link rel="stylesheet" href="css/leaflet.css">
+        <link rel="stylesheet" href="css/L.Control.Layers.Tree.css">
+        <link rel="stylesheet" href="css/fontawesome-all.min.css">
+        <style>
+        html, body, #map {
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            margin: 0;
+        }
+        </style>
+        <title></title>
+    </head>
+    <body>
+        <div id="map"></div>
+        <script src="js/leaflet.js"></script>
+        <script src="js/L.Control.Layers.Tree.min.js"></script>
+        <script src="js/leaflet.rotatedMarker.js"></script>
+        <script src="js/leaflet.pattern.js"></script>
+        <script src="js/leaflet-hash.js"></script>
+        <script src="js/Autolinker.min.js"></script>
+        <script src="js/rbush.min.js"></script>
+        <script src="js/labelgun.min.js"></script>
+        <script src="js/labels.js"></script>
+        <script src="data/Grobogangetaserjo_2.js"></script>
+        <script>
+        var map = L.map('map', {
+            zoomControl:false, maxZoom:28, minZoom:1
+        }).fitBounds([[-7.102028460895264,110.88677836392625],[-7.0487530335588096,110.96177484118148]]);
+        
+        var hash = new L.Hash(map);
+        map.attributionControl.setPrefix('&middot; <a href="https://leafletjs.com" title="A JS library for interactive maps">Leaflet</a>');
+        var autolinker = new Autolinker({truncate: {length: 30, location: 'smart'}});
+
+        // Kontrol zoom
+        var zoomControl = L.control.zoom({
+            position: 'topleft'
+        }).addTo(map);
+        
+        var bounds_group = new L.featureGroup([]);
+        function setBounds() {
+        }
+
+        // Layer OpenStreetMap
+        map.createPane('pane_OpenStreetMap_0');
+        map.getPane('pane_OpenStreetMap_0').style.zIndex = 400;
+        var layer_OpenStreetMap_0 = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            pane: 'pane_OpenStreetMap_0',
+            opacity: 1.0,
+            attribution: '',
+            minZoom: 1,
+            maxZoom: 28,
+            minNativeZoom: 0,
+            maxNativeZoom: 19
+        });
+
+        // Layer Google Earth
+        map.createPane('pane_GoogleSatelite_1');
+        map.getPane('pane_GoogleSatelite_1').style.zIndex = 401;
+        var layer_GoogleSatelite_1 = L.tileLayer('http://mt0.google.com/vt/lyrs=s&hl=en&x={x}&y={y}&z={z}', {
+            pane: 'pane_GoogleSatelite_1',
+            opacity: 1.0,
+            attribution: '',
+            minZoom: 1,
+            maxZoom: 28,
+            minNativeZoom: 0,
+            maxNativeZoom: 18
+        });
+
+        // GeoJSON untuk batas-batas
+        function pop_Grobogangetaserjo_2(feature, layer) {
+            var popupContent = '<table>\
+                <tr><td class="visible-with-data" id="pemilik"colspan="2"><strong>Pemilik</strong><br />' + (feature.properties['pemilik'] !== null ? autolinker.link(feature.properties['pemilik'].toLocaleString()) : '') + '</td></tr>\
+                <tr><td class="visible-with-data" id="pl_citra"colspan="2"><strong>PL Citra</strong><br />' + (feature.properties['pl_citra'] !== null ? autolinker.link(feature.properties['pl_citra'].toLocaleString()) : '') + '</td></tr>\
+                <tr><td class="visible-with-data" id="nomor_sppt"colspan="2"><strong>Nomor SPPT</strong><br />' + (feature.properties['nomor_sppt'] !== null ? autolinker.link(feature.properties['nomor_sppt'].toLocaleString()) : '') + '</td></tr>\
+                <tr><td class="visible-with-data" id="tnh_pemda"colspan="2"><strong>tnh_pemda</strong><br />' + (feature.properties['tnh_pemda'] !== null ? autolinker.link(feature.properties['tnh_pemda'].toLocaleString()) : '') + '</td></tr>\
+                <tr><td class="visible-with-data" id="dusun"colspan="2"><strong>Dusun</strong><br />' + (feature.properties['dusun'] !== null ? autolinker.link(feature.properties['dusun'].toLocaleString()) : '') + '</td></tr>\
+                <tr><td class="visible-with-data" id="desa"colspan="2"><strong>Desa</strong><br />' + (feature.properties['desa'] !== null ? autolinker.link(feature.properties['desa'].toLocaleString()) : '') + '</td></tr>\
+            </table>';
+            layer.bindPopup(popupContent, { maxHeight: 400 });
+        }
+
+        function style_Grobogangetaserjo_2_0() {
+            return {
+                pane: 'pane_Grobogangetaserjo_2',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(141,90,153,1.0)',
+                interactive: true,
+            }
+        }
+
+        map.createPane('pane_Grobogangetaserjo_2');
+        map.getPane('pane_Grobogangetaserjo_2').style.zIndex = 402;
+        var layer_Grobogangetaserjo_2 = new L.geoJson(json_Grobogangetaserjo_2, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_Grobogangetaserjo_2',
+            layerName: 'layer_Grobogangetaserjo_2',
+            pane: 'pane_Grobogangetaserjo_2',
+            onEachFeature: pop_Grobogangetaserjo_2,
+            style: style_Grobogangetaserjo_2_0,
+        });
+        
+        // Group untuk batas peta
+        bounds_group.addLayer(layer_Grobogangetaserjo_2);
+        
+        // Tambahkan kontrol layer
+        var baseLayers = {
+            "OpenStreetMap": layer_OpenStreetMap_0,
+            "Google Earth": layer_GoogleSatelite_1
+        };
+
+        var overlayLayers = {
+            "Batas Wilayah": layer_Grobogangetaserjo_2
+        };
+
+        L.control.layers(baseLayers, overlayLayers, {collapsed: false}).addTo(map);
+
+        // Set default layers yang ditampilkan
+        map.addLayer(layer_OpenStreetMap_0); // Default layer background
+        map.addLayer(layer_Grobogangetaserjo_2); // Default layer batas
+        setBounds();
+
+        </script>
+    </body>
+</html>
